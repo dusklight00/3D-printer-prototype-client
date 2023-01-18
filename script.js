@@ -13,15 +13,15 @@ function get(url) {
   });
 }
 
-async function addOrder(name, model, location) {
+async function addOrder(name, completionTime, homeIndex) {
   const response = await get(
     BASE_URL +
       "/add_order?name=" +
       name +
-      "&model=" +
-      model +
-      "&location=" +
-      location
+      "&completionTime=" +
+      completionTime +
+      "&homeIndex=" +
+      homeIndex
   );
   return JSON.parse(response);
 }
@@ -67,9 +67,14 @@ model4.addEventListener("click", () => {
 
 const submitBtn = document.getElementById("submit-btn");
 const nameField = document.getElementById("name");
+const homeIndexField = document.getElementById("home");
+
+// Completition Time
+const COMPLETION_TIME = [10, 20, 30, 40];
 
 submitBtn.addEventListener("click", async () => {
   const name = nameField.value;
+  const homeIndex = homeIndexField.value - 1;
   if (name == "") {
     alert("Please fill the name space");
     return;
@@ -78,11 +83,12 @@ submitBtn.addEventListener("click", async () => {
     alert("Please select a model");
     return;
   }
-  if (!LOCATION) {
-    alert("Please select a location");
+  if (homeIndex === null) {
+    alert("Please select a home number");
     return;
   }
-  const result = await addOrder(name, MODEL_SELECTED, LOCATION);
+  const completionTime = COMPLETION_TIME[MODEL_SELECTED - 1];
+  const result = await addOrder(name, completionTime, homeIndex);
   console.log(result);
   alert("Order has been placed");
 });
